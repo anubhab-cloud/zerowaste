@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<!-- Add class="dark" initially if needed, JS will handle it -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroWasteByte Foundation</title>
+    <!-- Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            @apply bg-gray-50 text-gray-800 transition-colors duration-300; /* Light mode default */
+        }
+
+        /* Dark mode styles */
+        .dark body {
+             @apply bg-gray-900 text-gray-200;
+        }
+        /* Dark mode for cards, navbars, modals etc. */
+        .dark nav,
+        .dark #public-hero-view,
+        .dark #public-about-view,
+        .dark #public-donate-view .bg-white,
+        .dark #public-contact-view .bg-white,
+        .dark #public-blog-view header, /* Specific header */
+        .dark #public-blog-view article, /* Blog articles */
+        .dark #public-blog-view aside > div > div, /* Sidebar widgets */
+        .dark #main-app header,
+        .dark #main-app #pg-view > div, /* PG Tabs content */
+        .dark #main-app #ngo-view > div, /* NGO Tabs content */
+        .dark #alert-modal > div,
+        .dark #mobile-menu > div {
+            @apply bg-gray-800 border-gray-700 shadow-slate-900/50;
+        }
+        /* Adjust specific dark elements */
+        .dark #public-hero-view .bg-orange-50\/50 {
+             @apply bg-gray-700; /* Darker orange background */
+        }
+         .dark .bg-gray-50 { /* Light gray backgrounds in cards */
+             @apply bg-gray-700 border-gray-600;
+         }
+         .dark .bg-blue-50 { @apply bg-blue-900/50 border-blue-800; }
+         .dark .bg-green-50 { @apply bg-green-900/50 border-green-800; }
+         .dark .bg-indigo-50 { @apply bg-indigo-900/50 border-indigo-800; }
+         .dark .bg-red-50 { @apply bg-red-900/50 border-red-800; }
+
+        /* Dark text colors */
+        .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
+        .dark .text-gray-900, .dark .text-gray-800 {
+             @apply text-gray-100;
+        }
+        .dark .text-gray-700, .dark .text-gray-600, .dark .text-gray-500 {
+            @apply text-gray-300;
+        }
+        .dark .text-blue-600 { @apply text-blue-400; }
+        .dark .text-green-600 { @apply text-green-400; }
+        .dark .text-indigo-600 { @apply text-indigo-400; }
+        .dark .text-orange-700 { @apply text-orange-300; }
+        .dark .text-red-600 { @apply text-red-400; }
+        .dark .text-yellow-800 { @apply text-yellow-300; }
+
+        /* Dark background colors */
+        .dark .bg-orange-100 { @apply bg-orange-900/50 border-orange-700; }
+        .dark .bg-green-100 { @apply bg-green-900/50 border-green-700; }
+        .dark .bg-yellow-100 { @apply bg-yellow-900/50 border-yellow-700; }
+        .dark .bg-blue-100 { @apply bg-blue-900/50 border-blue-700; }
+        .dark .bg-indigo-100 { @apply bg-indigo-900/50 border-indigo-700; }
+
+        /* Dark Borders */
+        .dark .border-gray-100, .dark .border-gray-200, .dark .border-gray-300 {
+             @apply border-gray-700;
+        }
+        .dark .border-blue-200 { @apply border-blue-800; }
+
+        /* Dark Form Inputs */
+        .dark input[type="text"],
+        .dark input[type="email"],
+        .dark textarea {
+            @apply bg-gray-700 border-gray-600 text-gray-200 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500;
+        }
+        .dark .custom-file-input { @apply text-gray-400; }
+        .dark .custom-file-input::before {
+             background: linear-gradient(to right, #1f2937, #374151); /* dark gray gradient */
+             border-color: #4b5563; /* gray-600 */
+             color: #93c5fd; /* blue-300 */
+        }
+         .dark .custom-file-input:hover::before {
+             background: linear-gradient(to right, #374151, #4b5563);
+         }
+
+
+        .public-nav-link.active {
+            @apply text-blue-600 font-semibold;
+        }
+         .dark .public-nav-link.active {
+             @apply text-blue-400;
+         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+            }
+        }
+
+        .pulse-donate {
+            animation: pulse 2.5s infinite;
+        }
+
+        .tab-btn.active {
+            @apply text-blue-600 border-blue-600 font-semibold;
+        }
+         .dark .tab-btn.active {
+             @apply text-blue-400 border-blue-400;
+         }
+
+
+        /* Styling for input fields with icons */
+        .input-with-icon {
+            position: relative;
+        }
+        .input-with-icon i {
+            position: absolute;
+            left: 0.75rem; /* px-3 */
+            top: 50%;
+            transform: translateY(-50%);
+            @apply text-gray-400; /* light mode icon color */
+            pointer-events: none; /* Make icon non-interactive */
+        }
+         .dark .input-with-icon i {
+             @apply text-gray-500; /* dark mode icon color */
+         }
+
+        .input-with-icon input,
+        .input-with-icon textarea {
+            padding-left: 2.5rem; /* pl-10 */
+        }
+        /* Adjust textarea icon alignment */
+        .input-with-icon textarea ~ i {
+             top: 1.2rem; /* Adjust based on padding/line-height */
+             transform: translateY(0);
+        }
+
+
+        /* Underline effect for title */
+        .title-underline::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #3b82f6, #60a5fa); /* blue gradient */
+            margin: 0.75rem auto 0; /* mt-3 */
+            border-radius: 2px;
+        }
+
+        /* Custom file input style */
+        .custom-file-input::-webkit-file-upload-button {
+          visibility: hidden;
+        }
+        .custom-file-input::before {
+          content: 'Select Photo';
+          display: inline-block;
+          background: linear-gradient(to right, #dbeafe, #eff6ff); /* light blue gradient */
+          border: 1px solid #bfdbfe; /* blue-200 */
+          border-radius: 0.375rem; /* rounded-md */
+          padding: 0.65rem 1rem; /* Adjusted padding */
+          outline: none;
+          white-space: nowrap;
+          cursor: pointer;
+          font-weight: 600;
+          font-size: 0.875rem; /* text-sm */
+          color: #3b82f6; /* blue-600 */
+          margin-right: 0.75rem; /* mr-3 */
+          transition: all 0.2s ease-in-out;
+        }
+        .custom-file-input:hover::before {
+          background: linear-gradient(to right, #bfdbfe, #dbeafe);
+        }
+        .custom-file-input:active::before {
+          background: linear-gradient(to right, #93c5fd, #bfdbfe);
+        }
+        .file-name-display {
+            font-size: 0.875rem; /* text-sm */
+            @apply text-gray-500;
+            margin-top: 0.5rem; /* mt-2 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+         .dark .file-name-display {
+             @apply text-gray-400;
+         }
+
+
+    </style>
+     <script>
+         // Tailwind dark mode configuration
+         tailwind.config = {
+             darkMode: 'class', // Enable class strategy
+             theme: {
+                 extend: {
+                     // Add custom dark mode colors if needed
+                 }
+             }
+         }
+     </script>
+</head>
+<body class="min-h-screen antialiased"> <!-- Base colors moved to style tag -->
+
+    <div id="app" class="w-full max-w-7xl mx-auto p-4 md:p-6"> <!-- Changed max-w to 7xl to match blog -->
+
+        <!-- ===== Public View (Logged Out) ===== -->
+        <div id="public-view">
+            <!-- Public Navbar -->
+            <nav class="bg-gradient-to-r from-white to-blue-50 p-4 rounded-xl shadow-lg shadow-slate-200/60 flex justify-between items-center sticky top-4 z-40 dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-900 dark:shadow-slate-900/50">
+                <div class="flex items-center gap-2">
+                    <!-- Logo Removed, Text Added -->
+                     <span class="font-bold text-xl text-gray-800 dark:text-gray-100">ZeroWasteByte</span>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-2xl text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+                <!-- Desktop nav links -->
+                <div class="hidden md:flex items-center gap-6" id="public-nav-links">
+                    <a href="#" class="public-nav-link text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 font-medium transition-colors duration-200" data-view="hero">Home</a>
+                    <a href="#" class="public-nav-link text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 font-medium transition-colors duration-200" data-view="about">About</a>
+                    <a href="#" class="public-nav-link text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 font-medium transition-colors duration-200" data-view="donate">Donate</a>
+                    <a href="#" class="public-nav-link text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 font-medium transition-colors duration-200" data-view="blog">Blog</a>
+                    <a href="#" class="public-nav-link text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 font-medium transition-colors duration-200" data-view="contact">Contact</a>
+
+                     <!-- Dark Mode Toggle Button -->
+                     <button id="darkModeToggle" class="ml-4 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none transition-colors duration-200">
+                         <i class="fas fa-moon text-xl"></i> <!-- Moon icon initially -->
+                     </button>
+
+                    <!-- Login Dropdown -->
+                    <div class="relative" id="login-dropdown-container">
+                        <button id="login-dropdown-btn" class="bg-gradient-to-r from-blue-600 to-blue-500 text-white py-2 px-5 rounded-lg font-semibold shadow-md hover:from-blue-700 hover:to-blue-600 transition-all duration-300 transform hover:shadow-lg hover:-translate-y-0.5">
+                            Login <i class="fa-solid fa-caret-down ml-1 text-xs transition-transform duration-200"></i>
+                        </button>
+                        <div id="login-dropdown-menu" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl z-10 overflow-hidden border border-gray-100 dark:bg-gray-700 dark:border-gray-600">
+                            <a href="#" id="login-pg" class="block px-5 py-3 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 font-medium transition-colors duration-200">
+                                <i class="fa-solid fa-store mr-3 w-5 text-center text-blue-600 dark:text-blue-400"></i>Log in as PG Owner
+                            </a>
+                            <a href="#" id="login-ngo" class="block px-5 py-3 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 font-medium transition-colors duration-200">
+                                <i class="fa-solid fa-users mr-3 w-5 text-center text-green-600 dark:text-green-400"></i>Log in as NGO
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Mobile Menu Panel -->
+            <!-- Styles updated in <style> block for dark mode -->
+            <div id="mobile-menu" class="hidden md:hidden fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50">
+                <div class="bg-white dark:bg-gray-800 w-4/5 max-w-sm h-full shadow-2xl p-6">
+                    <div class="flex justify-between items-center mb-8">
+                         <!-- Logo Removed, Text Added -->
+                         <span class="font-bold text-xl text-gray-800 dark:text-gray-100">ZeroWasteByte</span>
+                        <button id="mobile-close-btn" class="text-2xl text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200">&times;</button>
+                    </div>
+                    <nav class="flex flex-col gap-5">
+                        <a href="#" class="mobile-nav-link block text-xl text-gray-700 dark:text-gray-200 font-semibold py-3" data-view="hero">Home</a>
+                        <a href="#" class="mobile-nav-link block text-xl text-gray-700 dark:text-gray-200 font-semibold py-3" data-view="about">About</a>
+                        <a href="#" class="mobile-nav-link block text-xl text-gray-700 dark:text-gray-200 font-semibold py-3" data-view="donate">Donate</a>
+                        <a href="#" class="mobile-nav-link block text-xl text-gray-700 dark:text-gray-200 font-semibold py-3" data-view="blog">Blog</a>
+                        <a href="#" class="mobile-nav-link block text-xl text-gray-700 dark:text-gray-200 font-semibold py-3" data-view="contact">Contact</a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- ===== START: Home Page Content ===== -->
+            <!-- Styles updated in <style> block for dark mode -->
+            <div id="public-hero-view" class="public-view-section bg-white my-8 rounded-xl shadow-xl shadow-blue-50/50 overflow-hidden dark:bg-gray-800 dark:shadow-slate-900/50 dark:border dark:border-gray-700">
+                <!-- Hero Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-5">
+                    <!-- Left Side -->
+                    <div class="md:col-span-2 bg-orange-50/50 dark:bg-gray-700 p-8 md:p-12 flex flex-col justify-between">
+                        <div>
+                            <span class="inline-block bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-300 dark:border-orange-700 text-sm font-semibold px-4 py-1 rounded-full border border-orange-200">
+                                Food to Needy
+                            </span>
+                            <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 mt-4 mb-4">Feed the hungry, nourish a soul.</h1>
+                            <p class="text-xl text-gray-600 dark:text-gray-300 max-w-lg mb-8">Your surplus food can be a lifeline. Join us to connect with NGOs and make sure no good food goes to waste.</p>
+                             <!-- Main Action Buttons -->
+                            <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                                <button id="hero-donate-btn" class="flex-1 bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 px-8 rounded-lg font-semibold text-lg shadow-md hover:from-blue-700 hover:to-blue-600 transition-all duration-300 transform hover:shadow-lg hover:-translate-y-0.5 pulse-donate">
+                                    <i class="fa-solid fa-gift mr-2"></i>Donate Now
+                                </button>
+                                <button id="hero-list-btn" class="flex-1 bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500 dark:hover:bg-gray-500 py-3 px-8 rounded-lg font-semibold text-lg shadow-md hover:bg-gray-200 transition-all duration-300 transform hover:shadow-lg hover:-translate-y-0.5 border border-gray-200">
+                                    <i class="fa-solid fa-store mr-2"></i>List Surplus
+                                </button>
+                            </div>
+                            <!-- New Collaborate Button -->
+                             <div class="text-center mt-6 mb-8">
+                                 <button id="hero-collaborate-btn" class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-3 px-10 rounded-lg font-semibold text-lg shadow-md hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 transform hover:shadow-lg hover:-translate-y-0.5">
+                                     <i class="fa-solid fa-handshake mr-2"></i>Collaborate Now
+                                 </button>
+                             </div>
+                        </div>
+                        <img src="121.jpg" alt="Two children" class="rounded-lg shadow-md w-full h-auto object-cover transition-all duration-300 hover:shadow-lg">
+                    </div>
+
+                    <!-- Right Side -->
+                    <div class="md:col-span-3 grid grid-cols-2 gap-4 p-4">
+                        <img src="12.jpeg" alt="Collage Image 1" class="rounded-lg shadow-md h-full w-full object-cover col-span-2 transition-all duration-300 hover:shadow-xl hover:scale-105">
+                        <img src="155.jpg" alt="Collage Image 2" class="rounded-lg shadow-md h-full w-full object-cover transition-all duration-300 hover:shadow-xl hover:scale-105">
+                        <img src="13.jpg" alt="Collage Image 3" class="rounded-lg shadow-md h-full w-full object-cover transition-all duration-300 hover:shadow-xl hover:scale-105">
+                        <img src="11.jpg" alt="Collage Image 4" class="rounded-lg shadow-md h-full w-full object-cover transition-all duration-300 hover:shadow-xl hover:scale-105">
+                        <img src="299.png" alt="Collage Image 5" class="rounded-lg shadow-md h-full w-full object-cover transition-all duration-300 hover:shadow-xl hover:scale-105">
+                    </div>
+                </div>
+
+                <!-- "About/Impact" Section (Inside Home Page) -->
+                 <!-- Styles updated in <style> block for dark mode -->
+                <div class="my-8 p-8 md:p-12">
+                    <div class="max-w-5xl mx-auto">
+                        <!-- "About Us" section -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+                            <!-- Left Image -->
+                            <div>
+                                <img src="Gemini_Generated_Image_ap7yf6ap7yf6ap7y.png" alt="ZeroWasteByte Team at Work" class="rounded-xl shadow-lg w-full h-auto object-cover transition-all duration-300 hover:shadow-2xl hover:scale-105" onerror="this.onerror=null; this.src='https://placehold.co/600x450/cccccc/ffffff?text=Image+Not+Found'">
+                            </div>
+                            <!-- Right Content -->
+                            <div>
+                                <h2 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-6">About ZeroWasteByte</h2>
+                                <p class="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+                                    We are a technology-driven, non-profit platform dedicated to solving the twin problems of food waste and hunger. We connect those with surplus to those in need, efficiently and reliably.
+                                </p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <div class="bg-gray-50 dark:bg-gray-700 dark:border-gray-600 p-6 rounded-lg border border-gray-200">
+                                        <h4 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">Our Vision</h4>
+                                        <p class="text-gray-600 dark:text-gray-300">A world with zero food waste and zero hunger, where technology bridges the gap between surplus and scarcity.</p>
+                                    </div>
+                                    <div class="bg-gray-50 dark:bg-gray-700 dark:border-gray-600 p-6 rounded-lg border border-gray-200">
+                                        <h4 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">Our Mission</h4>
+                                        <p class="text-gray-600 dark:text-gray-300">To provide an easy-to-use platform that empowers PGs, restaurants, and NGOs to collaborate and ensure no good food goes to waste.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End "About Us" section -->
+
+                        <!-- "Our Impact" Section -->
+                        <div id="impact-section" class="mb-8">
+                            <h3 class="text-3xl font-semibold text-gray-900 dark:text-gray-100 text-center mb-10">Our Impact (So Far)</h3>
+                            <div class="flex flex-col md:flex-row justify-center gap-8 md:gap-12">
+                                <!-- Stat 1: Meals Served -->
+                                <div class="text-center flex flex-col items-center">
+                                    <div class="w-24 h-24 bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300 dark:border-blue-800 rounded-full flex items-center justify-center mb-4 border-4 border-white dark:border-gray-800 shadow-md">
+                                        <i class="fa-solid fa-utensils text-4xl"></i>
+                                    </div>
+                                    <span class="block text-4xl font-bold text-blue-600 dark:text-blue-400" data-target="3000">0</span>
+                                    <span class="text-lg font-semibold text-gray-700 dark:text-gray-300 mt-1">Meals Served</span>
+                                </div>
+                                <!-- Stat 2: PG Owners -->
+                                <div class="text-center flex flex-col items-center">
+                                    <div class="w-24 h-24 bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-300 dark:border-green-800 rounded-full flex items-center justify-center mb-4 border-4 border-white dark:border-gray-800 shadow-md">
+                                        <i class="fa-solid fa-store text-4xl"></i>
+                                    </div>
+                                    <span class="block text-4xl font-bold text-green-600 dark:text-green-400" data-target="150">0</span>
+                                    <span class="text-lg font-semibold text-gray-700 dark:text-gray-300 mt-1">PG Owners Joined</span>
+                                </div>
+                                <!-- Stat 3: NGO Partners -->
+                                <div class="text-center flex flex-col items-center">
+                                    <div class="w-24 h-24 bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-300 dark:border-indigo-800 rounded-full flex items-center justify-center mb-4 border-4 border-white dark:border-gray-800 shadow-md">
+                                        <i class="fa-solid fa-users text-4xl"></i>
+                                    </div>
+                                    <span class="block text-4xl font-bold text-indigo-600 dark:text-indigo-400" data-target="45">0</span>
+                                    <span class="text-lg font-semibold text-gray-700 dark:text-gray-300 mt-1">NGO Partners</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End "Our Impact" Section -->
+                    </div>
+                </div>
+            </div>
+            <!-- ===== END: Home Page Content ===== -->
+
+
+            <!-- ===== START: About Page Content ===== -->
+             <!-- Styles updated in <style> block for dark mode -->
+            <div id="public-about-view" class="public-view-section hidden bg-white my-8 p-8 md:p-12 rounded-xl shadow-xl shadow-slate-100 dark:bg-gray-800 dark:shadow-slate-900/50 dark:border dark:border-gray-700">
+                <div class="max-w-5xl mx-auto">
+                    <!-- Section Title -->
+                    <div class="text-center mb-16">
+                         <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-gray-100 mb-4 tracking-tight">About ZeroWasteByte</h2>
+                         <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Connecting Surplus Food with Those in Need Across Bengaluru.</p>
+                         <div class="mt-4 w-24 h-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto rounded-full"></div>
+                    </div>
+
+                    <!-- New: Our Story -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
+                        <div>
+                             <img src="https://placehold.co/600x400/eff6ff/1e3a8a?text=Our+Journey" alt="Team discussing plans" class="rounded-xl shadow-lg w-full h-auto object-cover">
+                        </div>
+                        <div>
+                            <h3 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">Our Story</h3>
+                            <p class="text-lg text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
+                                ZeroWasteByte was born from a simple observation: perfectly good food going to waste in PGs and restaurants while many in our city struggle with hunger. We believed technology could bridge this gap. Our journey started with a commitment to create a seamless, efficient platform to redirect surplus food, transforming potential waste into valuable meals.
+                            </p>
+                            <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                                We are driven by the vision of a Bengaluru where no one goes hungry and no food goes to waste.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- New: The Challenge & Our Solution -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
+                        <!-- The Challenge -->
+                        <div class="bg-red-50 dark:bg-red-900/50 dark:border-red-800 p-8 rounded-xl border border-red-200 shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+                            <i class="fa-solid fa-triangle-exclamation text-4xl text-red-600 dark:text-red-400 mb-4"></i>
+                            <h4 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-3">The Challenge</h4>
+                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                Food waste is a significant environmental and social issue. In Bengaluru alone, tonnes of edible food are discarded daily from various sources, including PGs. Simultaneously, food insecurity affects vulnerable populations across the city. Coordinating the logistics of collecting and distributing surplus food quickly and safely is complex.
+                            </p>
+                        </div>
+                        <!-- Our Solution -->
+                        <div class="bg-green-50 dark:bg-green-900/50 dark:border-green-800 p-8 rounded-xl border border-green-200 shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+                             <i class="fa-solid fa-lightbulb text-4xl text-green-600 dark:text-green-400 mb-4"></i>
+                            <h4 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-3">Our Solution</h4>
+                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                ZeroWasteByte provides a real-time platform connecting food donors (like PGs) with registered NGOs. Our system facilitates quick notifications, efficient claims, and coordinated pickups. By leveraging technology, we streamline the food rescue process, ensuring that surplus food reaches those who need it most, minimizing waste and maximizing impact.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- How It Works Section (Existing) -->
+                     <!-- Styles updated in <style> block for dark mode -->
+                    <div>
+                        <h3 class="text-3xl font-semibold text-gray-900 dark:text-gray-100 text-center mb-10">How It Works</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                            <!-- Step 1 -->
+                            <div class="bg-gray-50 dark:bg-gray-700 dark:border-gray-600 p-8 rounded-xl shadow-lg shadow-slate-100 dark:shadow-slate-900/50 border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <div class="w-16 h-16 bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300 dark:border-blue-800 rounded-full flex items-center justify-center mx-auto mb-5 border-4 border-white dark:border-gray-700 shadow-md">
+                                    <i class="fa-solid fa-store text-3xl"></i>
+                                </div>
+                                <h4 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">1. List Surplus</h4>
+                                <p class="text-gray-600 dark:text-gray-300">PG Owners & restaurants list their surplus food on our platform in seconds.</p>
+                            </div>
+                            <!-- Step 2 -->
+                            <div class="bg-gray-50 dark:bg-gray-700 dark:border-gray-600 p-8 rounded-xl shadow-lg shadow-slate-100 dark:shadow-slate-900/50 border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <div class="w-16 h-16 bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300 dark:border-blue-800 rounded-full flex items-center justify-center mx-auto mb-5 border-4 border-white dark:border-gray-700 shadow-md">
+                                    <i class="fa-solid fa-bell text-3xl"></i>
+                                </div>
+                                <h4 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">2. Connect Instantly</h4>
+                                <p class="text-gray-600 dark:text-gray-300">Verified NGOs in the area are immediately notified about the available food.</p>
+                            </div>
+                            <!-- Step 3 -->
+                            <div class="bg-gray-50 dark:bg-gray-700 dark:border-gray-600 p-8 rounded-xl shadow-lg shadow-slate-100 dark:shadow-slate-900/50 border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <div class="w-16 h-16 bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300 dark:border-blue-800 rounded-full flex items-center justify-center mx-auto mb-5 border-4 border-white dark:border-gray-700 shadow-md">
+                                    <i class="fa-solid fa-truck-pickup text-3xl"></i>
+                                </div>
+                                <h4 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">3. Feed the Needy</h4>
+                                <p class="text-gray-600 dark:text-gray-300">The NGO claims the food, picks it up, and distributes it to people who need it most.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                     <!-- New: Our Values Section -->
+                      <!-- Styles updated in <style> block for dark mode -->
+                     <div class="mt-20 text-center">
+                         <h3 class="text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-10">Our Core Values</h3>
+                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                             <div class="flex flex-col items-center p-4 rounded-lg transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-md hover:scale-105">
+                                 <i class="fa-solid fa-seedling text-4xl text-green-600 dark:text-green-400 mb-3"></i>
+                                 <h5 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-1">Sustainability</h5>
+                                 <p class="text-gray-600 dark:text-gray-300 text-sm">Reducing waste for a healthier planet.</p>
+                             </div>
+                             <div class="flex flex-col items-center p-4 rounded-lg transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-md hover:scale-105">
+                                 <i class="fa-solid fa-users text-4xl text-blue-600 dark:text-blue-400 mb-3"></i>
+                                 <h5 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-1">Community</h5>
+                                 <p class="text-gray-600 dark:text-gray-300 text-sm">Building connections to fight hunger together.</p>
+                             </div>
+                             <div class="flex flex-col items-center p-4 rounded-lg transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-md hover:scale-105">
+                                  <i class="fa-solid fa-gauge-high text-4xl text-indigo-600 dark:text-indigo-400 mb-3"></i>
+                                 <h5 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-1">Efficiency</h5>
+                                 <p class="text-gray-600 dark:text-gray-300 text-sm">Using technology for rapid food rescue.</p>
+                             </div>
+                             <div class="flex flex-col items-center p-4 rounded-lg transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-md hover:scale-105">
+                                  <i class="fa-solid fa-hand-holding-heart text-4xl text-red-600 dark:text-red-400 mb-3"></i>
+                                 <h5 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-1">Compassion</h5>
+                                 <p class="text-gray-600 dark:text-gray-300 text-sm">Ensuring dignity and support for all.</p>
+                             </div>
+                         </div>
+                     </div>
+
+                </div>
+            </div>
+            <!-- ===== END: About Page Content ===== -->
+
+            <!-- ===== START: Donate Page Content ===== -->
+            <!-- Styles updated in <style> block for dark mode -->
+            <div id="public-donate-view" class="public-view-section hidden my-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Main Content -->
+                    <div class="lg:col-span-2 bg-white dark:bg-gray-800 dark:border dark:border-gray-700 p-8 md:p-10 rounded-xl shadow-xl shadow-slate-100 dark:shadow-slate-900/50">
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">Support Our Cause</h2>
+                        <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">Feed the hungry nourish a soul. Your contribution can make a significant impact. Our platform connects surplus food, but the need for resources like containers, transport, and additional meals is constant. Help us support the NGOs and volunteers working tirelessly on the ground.</p>
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                             <!-- Cards remain visually similar, dark text handled globally -->
+                            <a href="#" class="relative block rounded-lg shadow-md overflow-hidden transition-all duration-300 group hover:shadow-xl hover:-translate-y-1">
+                                <img src="https://placehold.co/600x400/3b82f6/white?text=Feeding+Souls" alt="Donation" class="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                                <h4 class="absolute bottom-4 left-4 text-2xl font-bold text-white">Feeding Souls</h4>
+                            </a>
+                            <a href="#" class="relative block rounded-lg shadow-md overflow-hidden transition-all duration-300 group hover:shadow-xl hover:-translate-y-1">
+                                <img src="https://placehold.co/600x400/10b981/white?text=Our+Volunteers" alt="Volunteers" class="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                                <h4 class="absolute bottom-4 left-4 text-2xl font-bold text-white">Our Volunteers</h4>
+                            </a>
+                            <a href="#" class="relative block rounded-lg shadow-md overflow-hidden transition-all duration-300 group hover:shadow-xl hover:-translate-y-1">
+                                <img src="https://placehold.co/600x400/6366f1/white?text=Surplus+Connect" alt="Connecting" class="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                                <h4 class="absolute bottom-4 left-4 text-2xl font-bold text-white">Surplus Connect</h4>
+                            </a>
+                            <a href="#" class="relative block rounded-lg shadow-md overflow-hidden transition-all duration-300 group hover:shadow-xl hover:-translate-y-1">
+                                <img src="https://placehold.co/600x400/ef4444/white?text=Make+a+Difference" alt="Impact" class="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                                <h4 class="absolute bottom-4 left-4 text-2xl font-bold text-white">Make a Difference</h4>
+                            </a>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300">These images represent the collective effort of PGs and NGOs. Every donation, whether it's food, items, or funds, helps create these moments of relief and happiness.</p>
+                    </div>
+
+                    <!-- Donation Sidebar -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <div class="bg-white dark:bg-gray-800 dark:border dark:border-gray-700 p-6 rounded-xl shadow-xl shadow-slate-100 dark:shadow-slate-900/50">
+                            <h3 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Donate Funds</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">Your financial support helps us cover operational costs, buy packing materials, and support NGOs directly.</p>
+                            <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 rounded-lg border border-gray-200">
+                                <p class="font-medium text-gray-700 dark:text-gray-300 mb-2">Pay via UPI / QR Code</p>
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=ZeroWasteByteFoundationDonation&qzone=2&bgcolor=4B5563&color=E5E7EB" alt="QR Code" class="w-48 h-48 mx-auto rounded-lg border-4 border-white dark:border-gray-700 shadow-md p-1 bg-gray-600"> <!-- Dark mode QR adjustments -->
+                                <div class="flex justify-center gap-6 mt-3 text-3xl">
+                                     <i class="fa-brands fa-google-pay text-red-600 hover:text-red-700 transition-colors" title="Google Pay"></i>
+                                     <i class="fa-brands fa-paypal text-blue-600 hover:text-blue-700 transition-colors" title="PayPal (Example)"></i>
+                                     <i class="fa-brands fa-amazon-pay text-yellow-500 hover:text-yellow-600 transition-colors" title="Amazon Pay"></i>
+                                 </div>
+                            </div>
+                            <div class="mt-6">
+                                <h4 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Bank Transfer</h4>
+                                <div class="p-4 bg-blue-50 dark:bg-blue-900/50 dark:border-blue-800 rounded-lg space-y-2 text-sm text-gray-800 dark:text-gray-300 border border-blue-200">
+                                    <p><strong class="dark:text-gray-100">Bank:</strong> Axis Bank (Demo)</p>
+                                    <p><strong class="dark:text-gray-100">A/C Name:</strong> ZeroWasteByte Foundation</p>
+                                    <p><strong class="dark:text-gray-100">A/C Number:</strong> 000123456789</p>
+                                    <p><strong class="dark:text-gray-100">IFSC:</strong> AXIS0000001</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fulfill an Item Request Section (Now Donate for Item) -->
+                 <!-- Styles updated in <style> block for dark mode -->
+                <div class="mt-16">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">Donate for Specific Items</h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">
+                        Our NGO partners often need specific items beyond food. You can directly contribute funds towards purchasing these essentials.
+                    </p>
+                    <div id="public-fulfill-requests-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Public item requests (modified for donation) will be dynamically inserted here -->
+                        <!-- Card dark mode handled by general rules -->
+                    </div>
+                </div>
+            </div>
+            <!-- ===== END: Donate Page Content ===== -->
+
+            <!-- ===== START: Contact Page Content ===== -->
+            <!-- Styles updated in <style> block for dark mode -->
+            <div id="public-contact-view" class="public-view-section hidden my-8">
+                <div class="bg-white dark:bg-gray-800 dark:border dark:border-gray-700 p-8 md:p-12 rounded-xl shadow-xl shadow-slate-100 dark:shadow-slate-900/50">
+                    <h2 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-10 text-center title-underline">Get in Touch</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+                        <!-- Contact Form -->
+                         <!-- Form inputs dark mode handled by global style -->
+                        <form id="contact-form" class="space-y-6">
+                            <!-- Name Input -->
+                            <div class="input-with-icon">
+                                <label for="contact-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+                                <i class="fa-solid fa-user"></i>
+                                <input type="text" id="contact-name" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" required placeholder="Your Name">
+                            </div>
+                             <!-- Email Input -->
+                            <div class="input-with-icon">
+                                <label for="contact-email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
+                                <i class="fa-solid fa-envelope"></i>
+                                <input type="email" id="contact-email" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" required placeholder="you@example.com">
+                            </div>
+                            <!-- Subject Input -->
+                            <div class="input-with-icon">
+                                <label for="contact-subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subject</label>
+                                <i class="fa-solid fa-lightbulb"></i>
+                                <input type="text" id="contact-subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" required placeholder="Reason for contacting">
+                            </div>
+                             <!-- Message Textarea -->
+                            <div class="input-with-icon">
+                                <label for="contact-message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Message</label>
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                <textarea id="contact-message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none" required placeholder="Your message here..."></textarea>
+                            </div>
+                            <!-- Submit Button -->
+                            <div class="text-left">
+                                <button type="submit" class="bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 px-8 rounded-lg font-semibold shadow-md hover:from-blue-700 hover:to-blue-600 transition-all duration-300 transform hover:shadow-lg hover:-translate-y-0.5 active:scale-95">
+                                    <i class="fa-solid fa-paper-plane mr-2"></i>Send Message
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Contact Info & Map -->
+                         <!-- Styles updated in <style> block for dark mode -->
+                        <div class="space-y-8 mt-2">
+                            <div>
+                                <h3 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-5 border-b dark:border-gray-700 pb-3">Contact Information</h3>
+                                <div class="space-y-5 text-gray-700 dark:text-gray-300">
+                                    <a href="#" class="group flex items-start p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                                        <i class="fa-solid fa-location-dot w-6 text-center text-2xl text-blue-500 mt-1 group-hover:text-blue-700 dark:text-blue-400 dark:group-hover:text-blue-300 transition-colors duration-200"></i>
+                                        <span class="ml-4">
+                                            <strong class="block text-gray-800 dark:text-gray-100 text-lg">Our Office</strong>
+                                            123 Surplus St, Hope Avenue <br> Bangalore, KA 560001
+                                        </span>
+                                    </a>
+                                    <a href="mailto:info@zerowastebyte.demo" class="group flex items-start p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                                        <i class="fa-solid fa-envelope w-6 text-center text-2xl text-blue-500 mt-1 group-hover:text-blue-700 dark:text-blue-400 dark:group-hover:text-blue-300 transition-colors duration-200"></i>
+                                        <span class="ml-4">
+                                            <strong class="block text-gray-800 dark:text-gray-100 text-lg">Email Us</strong>
+                                            info@zerowastebyte.demo
+                                        </span>
+                                    </a>
+                                    <a href="tel:+918012345678" class="group flex items-start p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                                        <i class="fa-solid fa-phone w-6 text-center text-2xl text-blue-500 mt-1 group-hover:text-blue-700 dark:text-blue-400 dark:group-hover:text-blue-300 transition-colors duration-200"></i>
+                                        <span class="ml-4">
+                                            <strong class="block text-gray-800 dark:text-gray-100 text-lg">Call Us</strong>
+                                            +91 (80) 1234 5678
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4 border-b dark:border-gray-700 pb-3">Find Us Here</h3>
+                                <div class="w-full h-64 bg-gray-200 dark:bg-gray-700 rounded-lg shadow-inner overflow-hidden border border-gray-300 dark:border-gray-600">
+                                    <iframe
+                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d248756.0431441818!2d77.49085208647754!3d12.95429457635671!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1670c9b44e6d%3A0xf8dfc3e8517e4fe0!2sBengaluru%2C%20Karnataka%2C%20India!5e0!3m2!1sen!2sus!4v1693300000000!5m2!1sen!2sus"
+                                        class="w-full h-full filter dark:grayscale dark:invert" <!-- Dark mode map style -->
+                                        style="border:0;"
+                                        allowfullscreen=""
+                                        loading="lazy"
+                                        referrerpolicy="no-referrer-when-downgrade">
+                                    </iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ===== END: Contact Page Content ===== -->
+
+            <!-- ===== START: Blog Page Content ===== -->
+             <!-- Styles updated in <style> block for dark mode -->
+            <div id="public-blog-view" class="public-view-section hidden my-8">
+                <!-- Blog Hero -->
+                 <header class="bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-xl shadow-lg shadow-blue-500/30 mb-12">
+                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 text-center">
+                         <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">Food for Thought</h1>
+                         <p class="mt-4 text-xl text-blue-100 max-w-2xl mx-auto">
+                             Stories, insights, and guides on fighting food waste and building a stronger community in Bengaluru.
+                         </p>
+                     </div>
+                 </header>
+
+                 <!-- Main Content Area -->
+                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+
+                     <!-- Main Content (Blog Posts) -->
+                     <div class="lg:col-span-2 space-y-10">
+
+                         <!-- Featured Post -->
+                         <article class="bg-white dark:bg-gray-800 dark:border dark:border-gray-700 rounded-lg shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl dark:shadow-slate-900/50">
+                             <img class="w-full h-64 md:h-80 object-cover"
+                                  src="https://placehold.co/1200x600/3b82f6/white?text=Community+Meal+Sharing"
+                                  alt="Volunteers sharing a community meal">
+                             <div class="p-6 md:p-8">
+                                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                     <span class="font-medium text-blue-600 dark:text-blue-400">Featured</span> &bull; Oct 30, 2025
+                                 </p>
+                                 <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                                     <a href="#" class="hover:text-blue-700 dark:hover:text-blue-300">The Bengaluru Hunger Paradox: Why PGs Can Be the Solution</a>
+                                 </h2>
+                                 <p class="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                                     Bengaluru is a city of abundance, yet thousands go hungry. Meanwhile, PGs and hostels face the daily challenge of surplus food. We explore how connecting these two dots can create a powerful, sustainable solution to urban hunger.
+                                 </p>
+                                 <a href="#" class="inline-flex items-center px-5 py-2.5 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200">
+                                     Read Full Story
+                                     <svg class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                 </a>
+                             </div>
+                         </article>
+
+                         <hr class="border-gray-200 dark:border-gray-700">
+
+                         <!-- Recent Posts Title -->
+                         <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Recent Posts</h2>
+
+                         <!-- Grid of Recent Posts -->
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                             <!-- Post Card 1 -->
+                             <article class="bg-white dark:bg-gray-800 dark:border dark:border-gray-700 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 dark:shadow-slate-900/50">
+                                 <img class="w-full h-48 object-cover"
+                                      src="https://placehold.co/600x400/a3e635/white?text=Volunteers+Sorting+Food"
+                                      alt="Volunteers sorting food donations">
+                                 <div class="p-5">
+                                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">By Jane Doe &bull; Oct 25, 2025</p>
+                                     <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                                         <a href="#" class="hover:text-blue-700 dark:hover:text-blue-300">A Day in the Life of a ZeroWasteByte Volunteer</a>
+                                     </h3>
+                                     <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                                         Ever wondered what it's like to be on the front lines of food rescue? We follow Kumar on his evening "run" from a PG in Koramangala to an NGO.
+                                     </p>
+                                     <a href="#" class="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">Read more &rarr;</a>
+                                 </div>
+                             </article>
+
+                             <!-- Post Card 2 -->
+                             <article class="bg-white dark:bg-gray-800 dark:border dark:border-gray-700 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 dark:shadow-slate-900/50">
+                                 <img class="w-full h-48 object-cover"
+                                      src="https://placehold.co/600x400/86efac/white?text=Fresh+Vegetables"
+                                      alt="Fresh vegetables in a hostel kitchen">
+                                 <div class="p-5">
+                                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">By Admin &bull; Oct 22, 2025</p>
+                                     <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                                         <a href="#" class="hover:text-blue-700 dark:hover:text-blue-300">Beyond the Bin: 5 Ways Your Hostel Can Reduce Food Waste</a>
+                                     </h3>
+                                     <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                                         Before you even list a donation, here are five simple, actionable tips for hostel and PG managers to reduce food surplus at the source.
+                                     </p>
+                                     <a href="#" class="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">Read more &rarr;</a>
+                                 </div>
+                             </article>
+
+                             <!-- Post Card 3 -->
+                             <article class="bg-white dark:bg-gray-800 dark:border dark:border-gray-700 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 dark:shadow-slate-900/50">
+                                 <img class="w-full h-48 object-cover"
+                                      src="https://placehold.co/600x400/4ade80/white?text=NGO+Partner+Building"
+                                      alt="An NGO partner's building front">
+                                 <div class="p-5">
+                                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">By Community Team &bull; Oct 19, 2025</p>
+                                     <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                                         <a href="#" class="hover:text-blue-700 dark:hover:text-blue-300">NGO Spotlight: Meet Our Partners at 'Asha Foundation'</a>
+                                     </h3>
+                                     <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                                         Learn about the incredible work 'Asha Foundation' does in BTM Layout and how your donations are directly supporting their night shelter.
+                                     </p>
+                                     <a href="#" class="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">Read more &rarr;</a>
+                                 </div>
+                             </article>
+
+                             <!-- Add more post cards here if needed -->
+
+                         </div>
+                     </div>
+
+                     <!-- Sidebar -->
+                     <aside class="lg:col-span-1">
+                          <!-- Styles updated in <style> block for dark mode -->
+                         <div class="sticky top-24 space-y-8">
+                             <!-- Categories -->
+                             <div class="bg-white dark:bg-gray-800 dark:border dark:border-gray-700 rounded-lg shadow-lg p-6 dark:shadow-slate-900/50">
+                                 <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4 border-b dark:border-gray-700 pb-3">Categories</h3>
+                                 <ul class="space-y-2">
+                                     <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:underline">Community Stories</a></li>
+                                     <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:underline">Food Waste Tips</a></li>
+                                     <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:underline">NGO Spotlights</a></li>
+                                     <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:underline">Volunteer Guides</a></li>
+                                     <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:underline">Platform Updates</a></li>
+                                 </ul>
+                             </div>
+
+                             <!-- Tags -->
+                             <div class="bg-white dark:bg-gray-800 dark:border dark:border-gray-700 rounded-lg shadow-lg p-6 dark:shadow-slate-900/50">
+                                 <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4 border-b dark:border-gray-700 pb-3">Tags</h3>
+                                 <div class="flex flex-wrap gap-2">
+                                     <a href="#" class="text-sm bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 px-3 py-1 rounded-full hover:bg-blue-100 hover:text-blue-800 dark:hover:bg-blue-900/50 dark:hover:text-blue-300 transition-colors duration-200">Bengaluru</a>
+                                     <a href="#" class="text-sm bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 px-3 py-1 rounded-full hover:bg-blue-100 hover:text-blue-800 dark:hover:bg-blue-900/50 dark:hover:text-blue-300 transition-colors duration-200">PGs</a>
+                                     <a href="#" class="text-sm bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 px-3 py-1 rounded-full hover:bg-blue-100 hover:text-blue-800 dark:hover:bg-blue-900/50 dark:hover:text-blue-300 transition-colors duration-200">Volunteering</a>
+                                     <a href="#" class="text-sm bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 px-3 py-1 rounded-full hover:bg-blue-100 hover:text-blue-800 dark:hover:bg-blue-900/50 dark:hover:text-blue-300 transition-colors duration-200">Sustainability</a>
+                                     <a href="#" class="text-sm bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 px-3 py-1 rounded-full hover:bg-blue-100 hover:text-blue-800 dark:hover:bg-blue-900/50 dark:hover:text-blue-300 transition-colors duration-200">Hunger</a>
+                                     <a href="#" class="text-sm bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 px-3 py-1 rounded-full hover:bg-blue-100 hover:text-blue-800 dark:hover:bg-blue-900/50 dark:hover:text-blue-300 transition-colors duration-200">NGOs</a>
+                                 </div>
+                             </div>
+                         </div>
+                     </aside>
+                 </div>
+            </div>
+            <!-- ===== END: Blog Page Content ===== -->
+
+        </div>
+        <!-- ===== END: Public View ===== -->
+
+
+        <!-- ===== Main Application (Logged In) ===== -->
+         <!-- Styles updated in <style> block for dark mode -->
+        <div id="main-app" class="hidden w-full fade-in">
+            <!-- Header -->
+            <header class="flex justify-between items-center mb-6 p-4 bg-gradient-to-r from-white to-blue-50 dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-900 rounded-xl shadow-lg shadow-slate-100 dark:shadow-slate-900/50">
+                <div class="flex items-center gap-2">
+                     <!-- Logo Only in Logged-in Header -->
+                     <span class="font-bold text-xl text-gray-800 dark:text-gray-100">ZeroWasteByte</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right">
+                        <div class="font-semibold text-gray-700 dark:text-gray-300" id="user-name"></div>
+                        <div class="text-sm text-blue-600 dark:text-blue-400 font-medium" id="user-role"></div>
+                    </div>
+                     <!-- Dark Mode Toggle Button (also in logged-in header) -->
+                     <button id="darkModeToggleLoggedIn" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none transition-colors duration-200">
+                         <i class="fas fa-moon text-xl"></i> <!-- Moon icon initially -->
+                     </button>
+                    <button id="logout-btn" class="text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200" title="Log Out">
+                        <i class="fa-solid fa-right-from-bracket text-2xl"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Welcome Banner -->
+             <!-- Styles updated in <style> block for dark mode -->
+            <div id="welcome-banner" class="hidden p-6 mb-6 rounded-xl text-white bg-gradient-to-r from-blue-600 to-blue-500 shadow-xl shadow-blue-500/30">
+                <h2 class="text-3xl font-bold mb-1">Welcome!</h2>
+                <p class="text-lg text-blue-100" id="welcome-message"></p>
+            </div>
+
+            <!-- ===== PG Owner View ===== -->
+             <!-- Tab content styles updated in <style> block -->
+            <div id="pg-view" class="hidden w-full">
+                <!-- Tabs -->
+                <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
+                    <nav class="flex -mb-px space-x-6 overflow-x-auto" aria-label="Tabs">
+                        <button class="tab-btn py-4 px-2 text-lg whitespace-nowrap text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-500 font-medium transition-all duration-200" data-tab="add-surplus">
+                            <i class="fa-solid fa-plus mr-2"></i>Add Surplus
+                        </button>
+                        <button class="tab-btn py-4 px-2 text-lg whitespace-nowrap text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-500 font-medium transition-all duration-200" data-tab="pg-listings">
+                            <i class="fa-solid fa-list-check mr-2"></i>My Listings
+                        </button>
+                        <button class="tab-btn py-4 px-2 text-lg whitespace-nowrap text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-500 font-medium transition-all duration-200" data-tab="fulfill-requests">
+                            <i class="fa-solid fa-box-open mr-2"></i>Fulfill Requests
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Tab Content: Add Surplus -->
+                <div id="add-surplus-tab" class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-xl shadow-slate-100 dark:shadow-slate-900/50 dark:border dark:border-gray-700">
+                     <!-- Form inputs dark mode handled by global style -->
+                    <form id="add-food-form" class="space-y-6">
+                        <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">List Your Surplus Items</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="food-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Food Name / Description</label>
+                                <input type="text" id="food-name" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" placeholder="e.g., Cooked Rice & Dal" required>
+                            </div>
+                            <div>
+                                <label for="food-quantity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Quantity (Feeds how many?)</label>
+                                <input type="text" id="food-quantity" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" placeholder="e.g., Feeds 10-15 people" required>
+                            </div>
+                            <div>
+                                <label for="pickup-time" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Best Before / Pickup By</label>
+                                <input type="text" id="pickup-time" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" placeholder="e.g., Must be picked up by 10 PM" required>
+                            </div>
+                            <div>
+                                <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pickup Location</label>
+                                <input type="text" id="location" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" placeholder="e.g., PG Address, Koramangala" required>
+                            </div>
+                             <!-- File Input -->
+                             <div class="md:col-span-2">
+                                 <label for="food-photo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Food Photo (Optional)</label>
+                                 <input type="file" id="food-photo" accept="image/*" class="custom-file-input block w-full text-sm"> <!-- File input styled via CSS -->
+                                 <div id="file-name-display" class="file-name-display"></div>
+                             </div>
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" class="bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 px-8 rounded-lg font-semibold shadow-md hover:from-blue-700 hover:to-blue-600 transition-all duration-300 transform hover:shadow-lg hover:-translate-y-0.5">
+                                <i class="fa-solid fa-paper-plane mr-2"></i>Submit Listing
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tab Content: My Listings -->
+                 <!-- Card dark mode handled by global style -->
+                <div id="pg-listings-tab" class="hidden">
+                    <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">My Active Listings</h2>
+                    <div id="pg-listings-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- PG Listings will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Tab Content: Fulfill Requests -->
+                 <!-- Card dark mode handled by global style -->
+                <div id="fulfill-requests-tab" class="hidden">
+                    <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">Fulfill NGO Requests</h2>
+                    <div id="fulfill-requests-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- NGO item requests will be dynamically inserted here -->
+                    </div>
+                    <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mt-12 mb-6">My Pledged Items</h2>
+                    <div id="pg-pledged-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Items pledged by this PG will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== NGO View ===== -->
+             <!-- Tab content styles updated in <style> block -->
+            <div id="ngo-view" class="hidden w-full">
+                <!-- Tabs -->
+                <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
+                    <nav class="flex -mb-px space-x-6 overflow-x-auto" aria-label="Tabs">
+                        <button class="tab-btn py-4 px-2 text-lg whitespace-nowrap text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-500 font-medium transition-all duration-200" data-tab="ngo-listings">
+                            <i class="fa-solid fa-utensils mr-2"></i>Available Food
+                        </button>
+                        <button class="tab-btn py-4 px-2 text-lg whitespace-nowrap text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-500 font-medium transition-all duration-200" data-tab="ngo-pickups">
+                            <i class="fa-solid fa-truck-pickup mr-2"></i>My Pickups
+                        </button>
+                        <button class="tab-btn py-4 px-2 text-lg whitespace-nowrap text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-500 font-medium transition-all duration-200" data-tab="request-items">
+                            <i class="fa-solid fa-clipboard-list mr-2"></i>Request Items
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Tab Content: Available Food -->
+                <div id="ngo-listings-tab">
+                    <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">Available Food Near You</h2>
+                    <div id="ngo-listings-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- NGO Listings will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Tab Content: My Pickups -->
+                <div id="ngo-pickups-tab" class="hidden">
+                    <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">My Claimed Pickups</h2>
+                    <div id="ngo-pickups-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- NGO Pickups will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Tab Content: Request Items -->
+                <div id="request-items-tab" class="hidden">
+                     <!-- Form inputs dark mode handled by global style -->
+                    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-xl shadow-slate-100 dark:shadow-slate-900/50 dark:border dark:border-gray-700">
+                        <form id="add-request-form" class="space-y-6">
+                            <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">Request Items You Need</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="item-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Item Name</label>
+                                    <input type="text" id="item-name" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" placeholder="e.g., Aluminum Containers" required>
+                                </div>
+                                <div>
+                                    <label for="item-quantity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Quantity</label>
+                                    <input type="text" id="item-quantity" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" placeholder="e.g., 500" required>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="submit" class="bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 px-8 rounded-lg font-semibold shadow-md hover:from-blue-700 hover:to-blue-600 transition-all duration-300 transform hover:shadow-lg hover:-translate-y-0.5">
+                                    <i class="fa-solid fa-paper-plane mr-2"></i>Submit Request
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mt-12 mb-6">My Active Requests</h2>
+                    <div id="ngo-requests-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- NGO's own item requests will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ===== END: Main Application ===== -->
+
+        <!-- ===== Custom Alert Modal ===== -->
+         <!-- Styles updated in <style> block for dark mode -->
+        <div id="alert-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-50 p-4"> <!-- Increased overlay opacity -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 max-w-sm w-full text-center transform transition-all scale-95 opacity-0">
+                <div id="alert-icon" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <!-- Icon will be set by JS -->
+                </div>
+                <h3 id="alert-title" class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2"></h3>
+                <p id="alert-message" class="text-gray-600 dark:text-gray-300 mb-6"></p>
+                <button id="alert-close-btn" class="w-full py-3 px-4 rounded-lg font-semibold text-white transition-colors duration-200 transform hover:-translate-y-0.5">
+                    Close
+                </button>
+            </div>
+        </div>
+        <!-- ===== END: Alert Modal ===== -->
+
+    </div>
+    <!-- ===== END: App Wrapper ===== -->
+
+    <!-- ===== FOOTER ===== -->
+    <!-- Footer dark mode styles applied directly -->
+    <footer class="bg-gray-900 text-gray-400 pt-16 pb-8 mt-16">
+        <div class="w-full max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+                <!-- Column 1: About -->
+                <div>
+                   <h5 class="text-lg font-semibold text-white mb-4">About Us</h5>
+                   <p class="text-sm leading-relaxed">
+                       A technology-driven, non-profit platform dedicated to solving the twin problems of food waste and hunger. We connect those with surplus to those in need.
+                   </p>
+               </div>
+
+                <!-- Column 2: Quick Links -->
+                <div>
+                    <h5 class="text-lg font-semibold text-white mb-4">Quick Links</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="public-nav-link-footer hover:text-white transition-colors duration-200" data-view="hero">Home</a></li>
+                        <li><a href="#" class="public-nav-link-footer hover:text-white transition-colors duration-200" data-view="about">About Us</a></li>
+                        <li><a href="#" class="public-nav-link-footer hover:text-white transition-colors duration-200" data-view="donate">Donate Now</a></li>
+                        <li><a href="#" class="public-nav-link-footer hover:text-white transition-colors duration-200" data-view="blog">Blog</a></li>
+                        <li><a href="#" class="public-nav-link-footer hover:text-white transition-colors duration-200" data-view="contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Follow Us -->
+                <div>
+                    <h5 class="text-lg font-semibold text-white mb-4">Follow Us</h5>
+                    <p class="text-sm mb-4">Stay updated with our latest impact stories and news.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" aria-label="Facebook" class="text-gray-400 hover:text-white transition-colors duration-200"><i class="fa-brands fa-facebook-f text-xl"></i></a>
+                        <a href="#" aria-label="Twitter" class="text-gray-400 hover:text-white transition-colors duration-200"><i class="fa-brands fa-twitter text-xl"></i></a>
+                        <a href="#" aria-label="Instagram" class="text-gray-400 hover:text-white transition-colors duration-200"><i class="fa-brands fa-instagram text-xl"></i></a>
+                        <a href="#" aria-label="LinkedIn" class="text-gray-400 hover:text-white transition-colors duration-200"><i class="fa-brands fa-linkedin-in text-xl"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Copyright Bar -->
+            <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+                <p class="mb-4 md:mb-0">© 2025 ZeroWasteByte Foundation. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="hover:text-white transition-colors duration-200">Terms & Conditions</a>
+                    <a href="#" class="hover:text-white transition-colors duration-200">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors duration-200">Refund Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- ===== END FOOTER ===== -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Dark Mode Logic ---
+            const htmlElement = document.documentElement;
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const darkModeToggleLoggedIn = document.getElementById('darkModeToggleLoggedIn'); // Toggle in logged-in header
+
+            // Function to set theme
+            function setTheme(theme) {
+                if (theme === 'dark') {
+                    htmlElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                    if (darkModeToggle) darkModeToggle.innerHTML = '<i class="fas fa-sun text-xl"></i>'; // Change icon to sun
+                     if (darkModeToggleLoggedIn) darkModeToggleLoggedIn.innerHTML = '<i class="fas fa-sun text-xl"></i>'; // Change icon to sun
+                } else {
+                    htmlElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                    if (darkModeToggle) darkModeToggle.innerHTML = '<i class="fas fa-moon text-xl"></i>'; // Change icon to moon
+                    if (darkModeToggleLoggedIn) darkModeToggleLoggedIn.innerHTML = '<i class="fas fa-moon text-xl"></i>'; // Change icon to moon
+                }
+            }
+
+            // Check localStorage or system preference
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else if (prefersDark) {
+                setTheme('dark');
+            } else {
+                setTheme('light'); // Default to light
+            }
+
+            // Event listener for toggle button(s)
+             function toggleTheme() {
+                const isDark = htmlElement.classList.contains('dark');
+                setTheme(isDark ? 'light' : 'dark');
+            }
+            if (darkModeToggle) darkModeToggle.addEventListener('click', toggleTheme);
+             if (darkModeToggleLoggedIn) darkModeToggleLoggedIn.addEventListener('click', toggleTheme);
+
+
+            // --- DUMMY DATA ---
+            const DUMMY_USERS = {
+                 // Removed name 'Example PG' and made it empty
+                pg: { id: 'pg123', name: '', role: 'PG Owner' },
+                ngo: { id: 'ngo456', name: 'Helping Hands Foundation', role: 'NGO' }
+            };
+
+            // --- STATE MANAGEMENT ---
+            let currentUser = null;
+            let listings = [];
+            let itemRequests = [];
+
+            // --- LOCAL STORAGE ---
+            function loadFromStorage() {
+                const storedUser = localStorage.getItem('surplusUser');
+                const storedListings = localStorage.getItem('surplusListings');
+                const storedItemRequests = localStorage.getItem('surplusItemRequests');
+
+                if (storedUser) {
+                    currentUser = JSON.parse(storedUser);
+                }
+
+                if (storedListings) {
+                    listings = JSON.parse(storedListings);
+                } else {
+                    listings = [
+                        { id: 'l1', pgId: 'pg999', pgName: 'Shanti Niwas PG', foodName: 'Vegetable Biryani', quantity: 'Feeds 20-25', pickupTime: 'By 9:00 PM', location: 'BTM Layout, Bangalore', photoFilename: 'biryani.jpg', status: 'Available', claimedByNgoId: null, claimedByNgoName: null }, // Added photoFilename
+                        { id: 'l2', pgId: 'pg123', pgName: 'Paradise PG', foodName: 'Roti and Paneer Curry', quantity: 'Feeds 8-10', pickupTime: 'By 10:00 PM', location: 'Koramangala 5th Block', photoFilename: null, status: 'Available', claimedByNgoId: null, claimedByNgoName: null } // Added photoFilename
+                    ];
+                }
+
+                if (storedItemRequests) {
+                    itemRequests = JSON.parse(storedItemRequests);
+                } else {
+                    itemRequests = [
+                        { id: 'r1', ngoId: 'ngo456', ngoName: 'Helping Hands Foundation', itemName: 'Aluminum Containers (Medium)', quantity: '500', status: 'Needed', fulfilledByPgId: null, fulfilledByPgName: null },
+                        { id: 'r2', ngoId: 'ngo999', ngoName: 'Food for All', itemName: 'Large Paper Bags', quantity: '1000', status: 'Needed', fulfilledByPgId: null, fulfilledByPgName: null }
+                    ];
+                }
+                saveToStorage(); // Save initial data if it was missing
+            }
+
+            function saveToStorage() {
+                localStorage.setItem('surplusUser', JSON.stringify(currentUser));
+                localStorage.setItem('surplusListings', JSON.stringify(listings));
+                localStorage.setItem('surplusItemRequests', JSON.stringify(itemRequests));
+            }
+
+            // --- DOM ELEMENTS ---
+            const publicView = document.getElementById('public-view');
+            const mainApp = document.getElementById('main-app');
+            const pgView = document.getElementById('pg-view');
+            const ngoView = document.getElementById('ngo-view');
+
+            const userNameEl = document.getElementById('user-name');
+            const userRoleEl = document.getElementById('user-role');
+
+            const welcomeBanner = document.getElementById('welcome-banner');
+            const welcomeMessage = document.getElementById('welcome-message');
+
+            const loginDropdownBtn = document.getElementById('login-dropdown-btn');
+            const loginDropdownMenu = document.getElementById('login-dropdown-menu');
+
+            const addFoodForm = document.getElementById('add-food-form');
+            const addRequestForm = document.getElementById('add-request-form');
+            const contactForm = document.getElementById('contact-form');
+            const foodPhotoInput = document.getElementById('food-photo');
+            const fileNameDisplay = document.getElementById('file-name-display');
+
+
+            const pgListingsGrid = document.getElementById('pg-listings-grid');
+            const ngoListingsGrid = document.getElementById('ngo-listings-grid');
+            const ngoPickupsGrid = document.getElementById('ngo-pickups-grid');
+            const ngoRequestsGrid = document.getElementById('ngo-requests-grid');
+            const fulfillRequestsGrid = document.getElementById('fulfill-requests-grid');
+            const pgPledgedGrid = document.getElementById('pg-pledged-grid');
+            const publicFulfillRequestsGrid = document.getElementById('public-fulfill-requests-grid');
+
+            const alertModal = document.getElementById('alert-modal');
+            const alertBox = alertModal ? alertModal.querySelector('div') : null;
+            const alertIcon = document.getElementById('alert-icon');
+            const alertTitle = document.getElementById('alert-title');
+            const alertMessage = document.getElementById('alert-message');
+            const alertCloseBtn = document.getElementById('alert-close-btn');
+
+            const publicNavLinks = document.getElementById('public-nav-links');
+            const publicViewSections = document.querySelectorAll('.public-view-section');
+
+            const heroDonateBtn = document.getElementById('hero-donate-btn');
+            const heroListBtn = document.getElementById('hero-list-btn');
+            const heroCollaborateBtn = document.getElementById('hero-collaborate-btn'); // New button
+
+            const footerNavLinks = document.querySelectorAll('.public-nav-link-footer');
+
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileCloseBtn = document.getElementById('mobile-close-btn');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+            // --- CORE FUNCTIONS ---
+            function init() {
+                loadFromStorage();
+                if (currentUser) {
+                    showView('app');
+                } else {
+                    showView('login');
+                    if(publicFulfillRequestsGrid) {
+                        renderPublicFulfillRequests();
+                    }
+                    setupCounterObserver();
+                }
+                attachEventListeners();
+            }
+
+            function login(role) {
+                currentUser = DUMMY_USERS[role];
+                saveToStorage();
+                showView('app');
+                if (loginDropdownMenu) loginDropdownMenu.classList.add('hidden');
+            }
+
+            function logout() {
+                currentUser = null;
+                saveToStorage();
+                if(welcomeBanner) {
+                    welcomeBanner.classList.add('hidden');
+                }
+                showView('login');
+                if(publicFulfillRequestsGrid) {
+                    renderPublicFulfillRequests();
+                }
+                setupCounterObserver();
+            }
+
+            function showView(viewName) {
+                if(publicView) publicView.classList.add('hidden');
+                if(mainApp) mainApp.classList.add('hidden');
+
+                if (viewName === 'login') {
+                    if(publicView) publicView.classList.remove('hidden');
+                    showPublicView('hero');
+                } else if (viewName === 'app') {
+                    if (!currentUser) return;
+
+                    if(mainApp) mainApp.classList.remove('hidden');
+
+                    if(userNameEl) userNameEl.textContent = currentUser.name;
+                    if(userRoleEl) userRoleEl.textContent = currentUser.role;
+
+
+                    if(welcomeMessage) {
+                        if (currentUser.role === 'PG Owner') {
+                            welcomeMessage.textContent = "You're all set to list surplus and make a real difference.";
+                        } else {
+                             const ngoNamePart = currentUser.name ? `, ${currentUser.name}` : '';
+                             welcomeMessage.textContent = `Thank you for your work${ngoNamePart}. Let's find some food to recover.`;
+                        }
+                    }
+                    if(welcomeBanner) welcomeBanner.classList.remove('hidden');
+
+
+                    if (currentUser.role === 'PG Owner') {
+                        if(pgView) pgView.classList.remove('hidden');
+                        if(ngoView) ngoView.classList.add('hidden');
+                        renderPGView();
+                        handleTabSwitch(pgView, 'add-surplus');
+                    } else {
+                        if(pgView) pgView.classList.add('hidden');
+                        if(ngoView) ngoView.classList.remove('hidden');
+                        renderNGOView();
+                        handleTabSwitch(ngoView, 'ngo-listings');
+                    }
+                     // Ensure correct dark mode icon is shown on view change
+                     const isDark = htmlElement.classList.contains('dark');
+                     if (darkModeToggleLoggedIn) {
+                         darkModeToggleLoggedIn.innerHTML = isDark ? '<i class="fas fa-sun text-xl"></i>' : '<i class="fas fa-moon text-xl"></i>';
+                     }
+                }
+                 // Ensure correct dark mode icon is shown on view change (for public view)
+                 const isDarkPublic = htmlElement.classList.contains('dark');
+                 if (darkModeToggle) {
+                    darkModeToggle.innerHTML = isDarkPublic ? '<i class="fas fa-sun text-xl"></i>' : '<i class="fas fa-moon text-xl"></i>';
+                 }
+            }
+
+            function showPublicView(viewName) {
+                publicViewSections.forEach(section => {
+                    section.classList.add('hidden');
+                });
+
+                const activeSection = document.getElementById(`public-${viewName}-view`);
+                if (activeSection) {
+                    activeSection.classList.remove('hidden');
+                    activeSection.classList.add('fade-in');
+                }
+
+                if(publicNavLinks) {
+                    publicNavLinks.querySelectorAll('.public-nav-link').forEach(link => {
+                        link.classList.toggle('active', link.dataset.view === viewName);
+                    });
+                }
+
+                mobileNavLinks.forEach(link => {
+                    link.classList.toggle('text-blue-600', link.dataset.view === viewName);
+                    link.classList.toggle('dark:text-blue-400', link.dataset.view === viewName); // Dark active
+                    link.classList.toggle('text-gray-700', link.dataset.view !== viewName);
+                    link.classList.toggle('dark:text-gray-200', link.dataset.view !== viewName); // Dark inactive
+                 });
+
+
+                if (viewName === 'hero') {
+                    setupCounterObserver();
+                }
+
+                if(mobileMenu) mobileMenu.classList.add('hidden');
+            }
+
+            function handleTabSwitch(view, tabName) {
+                if (!view) return;
+
+                const tabs = view.querySelectorAll('.tab-btn');
+                const tabContents = view.querySelectorAll('[id$="-tab"]');
+
+                tabs.forEach(tab => {
+                    const isActive = tab.dataset.tab === tabName;
+                     tab.classList.toggle('active', isActive);
+                    // Light mode inactive
+                    tab.classList.toggle('text-gray-500', !isActive);
+                    tab.classList.toggle('border-transparent', !isActive);
+                    tab.classList.toggle('hover:text-gray-700', !isActive);
+                    tab.classList.toggle('hover:border-gray-300', !isActive);
+                    // Dark mode inactive (will be overridden by .active if needed)
+                    tab.classList.toggle('dark:text-gray-400', !isActive);
+                    tab.classList.toggle('dark:hover:text-gray-200', !isActive);
+                    tab.classList.toggle('dark:hover:border-gray-500', !isActive);
+                });
+
+
+                tabContents.forEach(content => {
+                    if (content.id === `${tabName}-tab`) {
+                        content.classList.remove('hidden');
+                        content.classList.add('fade-in');
+                    } else {
+                        content.classList.add('hidden');
+                        content.classList.remove('fade-in');
+                    }
+                });
+            }
+
+            // --- Counter Animation ---
+            function animateCounters() {
+                const counters = document.querySelectorAll('#impact-section [data-target]');
+                counters.forEach(counter => {
+                    const target = +counter.dataset.target;
+                    if (!target || counter.dataset.animated) return;
+                    counter.dataset.animated = 'true';
+
+                    const duration = 2000;
+                    const intervalTime = 10;
+                    const totalSteps = duration / intervalTime;
+                    const increment = target / totalSteps;
+
+                    let current = 0;
+
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            clearInterval(timer);
+                            counter.textContent = target.toLocaleString() + "+";
+                        } else {
+                            counter.textContent = Math.ceil(current).toLocaleString();
+                        }
+                    }, intervalTime);
+                });
+            }
+
+            let counterObserver = null;
+            function setupCounterObserver() {
+                const impactSection = document.getElementById('impact-section');
+                if (!impactSection) return;
+
+                const counters = impactSection.querySelectorAll('[data-target]');
+                counters.forEach(counter => {
+                     counter.textContent = '0';
+                     delete counter.dataset.animated;
+                 });
+
+
+                if(counterObserver) {
+                    counterObserver.disconnect();
+                }
+
+                const options = {
+                    root: null,
+                    threshold: 0.5
+                };
+
+                counterObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            animateCounters();
+                        }
+                    });
+                }, options);
+
+                counterObserver.observe(impactSection);
+            }
+
+            // --- RENDERING FUNCTIONS ---
+            function renderPGView() {
+                if (!currentUser) return;
+
+                if (pgListingsGrid) {
+                    pgListingsGrid.innerHTML = '';
+                    const myListings = listings.filter(l => l.pgId === currentUser.id);
+                    pgListingsGrid.innerHTML = myListings.length === 0 ?
+                        `<p class="text-gray-600 dark:text-gray-300 col-span-full">You have not listed any surplus items yet.</p>` :
+                        myListings.map(item => {
+                            const isAvailable = item.status === 'Available';
+                            const statusColor = isAvailable ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 dark:border-green-700' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300 dark:border-yellow-700';
+                            const statusText = isAvailable ?
+                                '<i class="fa-solid fa-check-circle mr-2"></i>Available' :
+                                `<i class="fa-solid fa-truck-pickup mr-2"></i>Claimed by ${item.claimedByNgoName}`;
+                             const photoInfo = item.photoFilename ?
+                                 `<p class="flex items-center text-xs mt-2 text-gray-500 dark:text-gray-400"><i class="fa-solid fa-camera w-5 text-center mr-1 text-gray-400 dark:text-gray-500"></i> ${item.photoFilename}</p>` :
+                                 '';
+                            return `
+                            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg shadow-slate-100 dark:shadow-slate-900/50 border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">${item.foodName}</h3>
+                                    <span class="text-xs font-bold px-3 py-1 rounded-full ${statusColor}">${statusText}</span>
+                                </div>
+                                <p class="text-gray-600 dark:text-gray-300 mb-4"><strong>Quantity:</strong> ${item.quantity}</p>
+                                <div class="space-y-2 text-sm text-gray-700 dark:text-gray-300 border-t dark:border-gray-700 pt-4 mt-4">
+                                    <p class="flex items-center"><i class="fa-solid fa-clock w-5 text-center mr-2 text-blue-500 dark:text-blue-400"></i> ${item.pickupTime}</p>
+                                    <p class="flex items-center"><i class="fa-solid fa-location-dot w-5 text-center mr-2 text-blue-500 dark:text-blue-400"></i> ${item.location}</p>
+                                    ${photoInfo}
+                                </div>
+                            </div>`;
+                        }).join('');
+                }
+
+                if (fulfillRequestsGrid) {
+                    fulfillRequestsGrid.innerHTML = '';
+                    const neededItems = itemRequests.filter(r => r.status === 'Needed');
+                    fulfillRequestsGrid.innerHTML = neededItems.length === 0 ?
+                        `<p class="text-gray-600 dark:text-gray-300 col-span-full">There are no active item requests from NGOs right now.</p>` :
+                        neededItems.map(item => `
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg shadow-slate-100 dark:shadow-slate-900/50 border border-gray-100 dark:border-gray-700 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">${item.itemName}</h3>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">from ${item.ngoName}</p>
+                                <p class="text-gray-700 dark:text-gray-300 mb-6"><strong>Quantity Needed:</strong> ${item.quantity}</p>
+                            </div>
+                            <button data-id="${item.id}" class="pledge-btn w-full bg-gradient-to-r from-green-600 to-green-500 text-white py-3 px-6 rounded-lg font-semibold shadow-md hover:from-green-700 hover:to-green-600 transition-all duration-300 transform hover:shadow-lg hover:-translate-y-0.5">
+                                <i class="fa-solid fa-box-open mr-2"></i>Pledge to Fulfill
+                            </button>
+                        </div>
+                    `).join('');
+                }
+
+                if (pgPledgedGrid) {
+                    pgPledgedGrid.innerHTML = '';
+                    const pledgedItems = itemRequests.filter(r => r.fulfilledByPgId === currentUser.id);
+                    pgPledgedGrid.innerHTML = pledgedItems.length === 0 ?
+                        `<p class="text-gray-600 dark:text-gray-300 col-span-full">You have not pledged to fulfill any requests yet.</p>` :
+                        pledgedItems.map(item => `
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg shadow-blue-50 dark:shadow-blue-900/50 border-2 border-blue-100 dark:border-blue-800">
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">${item.itemName}</h3>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">for ${item.ngoName}</p>
+                            <p class="text-gray-700 dark:text-gray-300 mb-4"><strong>Quantity Pledged:</strong> ${item.quantity}</p>
+                            <p class="font-semibold text-blue-700 dark:text-blue-400"><i class="fa-solid fa-circle-check mr-2"></i> Pledged</p>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            function renderNGOView() {
+                if (!currentUser) return;
+
+                if (ngoListingsGrid) {
+                    ngoListingsGrid.innerHTML = '';
+                    const availableListings = listings.filter(l => l.status === 'Available');
+                    ngoListingsGrid.innerHTML = availableListings.length === 0 ?
+                        `<p class="text-gray-600 dark:text-gray-300 col-span-full">There are no available surplus items right now. Check back soon!</p>` :
+                        availableListings.map(item => {
+                             const photoInfo = item.photoFilename ?
+                                `<p class="flex items-center text-xs mt-2 text-gray-500 dark:text-gray-400"><i class="fa-solid fa-camera w-5 text-center mr-1 text-gray-400 dark:text-gray-500"></i> ${item.photoFilename}</p>` :
+                                '';
+                            return `
+                            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg shadow-slate-100 dark:shadow-slate-900/50 border border-gray-100 dark:border-gray-700 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">${item.foodName}</h3>
+                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">from ${item.pgName}</p>
+                                    <p class="text-gray-700 dark:text-gray-300 mb-4"><strong>Quantity:</strong> ${item.quantity}</p>
+                                    <div class="space-y-2 text-sm text-gray-700 dark:text-gray-300 mb-6 border-t dark:border-gray-700 pt-4 mt-4">
+                                        <p class="flex items-center"><i class="fa-solid fa-clock w-5 text-center mr-2 text-blue-500 dark:text-blue-400"></i> ${item.pickupTime}</p>
+                                        <p class="flex items-center"><i class="fa-solid fa-location-dot w-5 text-center mr-2 text-blue-500 dark:text-blue-400"></i> ${item.location}</p>
+                                        ${photoInfo}
+                                    </div>
+                                </div>
+                                <button data-id="${item.id}" class="claim-btn w-full bg-gradient-to-r from-green-600 to-green-500 text-white py-3 px-6 rounded-lg font-semibold shadow-md hover:from-green-700 hover:to-green-600 transition-all duration-300 transform hover:shadow-lg hover:-translate-y-0.5">
+                                    <i class="fa-solid fa-check mr-2"></i>Claim This Food
+                                </button>
+                            </div>
+                        `;}).join('');
+                }
+
+                if (ngoPickupsGrid) {
+                    ngoPickupsGrid.innerHTML = '';
+                    const myPickups = listings.filter(l => l.claimedByNgoId === currentUser.id);
+                    ngoPickupsGrid.innerHTML = myPickups.length === 0 ?
+                        `<p class="text-gray-600 dark:text-gray-300 col-span-full">You have not claimed any food items yet.</p>` :
+                        myPickups.map(item => {
+                            const photoInfo = item.photoFilename ?
+                                `<p class="flex items-center text-xs mt-2 text-gray-500 dark:text-gray-400"><i class="fa-solid fa-camera w-5 text-center mr-1 text-gray-400 dark:text-gray-500"></i> ${item.photoFilename}</p>` :
+                                '';
+                           return `
+                            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg shadow-yellow-50 dark:shadow-yellow-900/50 border-2 border-yellow-100 dark:border-yellow-800">
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">${item.foodName}</h3>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">from ${item.pgName}</p>
+                                <p class="text-gray-700 dark:text-gray-300 mb-4"><strong>Quantity:</strong> ${item.quantity}</p>
+                                <div class="space-y-2 text-sm text-gray-700 dark:text-gray-300 border-t dark:border-gray-700 pt-4 mt-4">
+                                    <p class="flex items-center"><i class="fa-solid fa-clock w-5 text-center mr-2 text-blue-500 dark:text-blue-400"></i> ${item.pickupTime}</p>
+                                    <p class="flex items-center"><i class="fa-solid fa-location-dot w-5 text-center mr-2 text-blue-500 dark:text-blue-400"></i> ${item.location}</p>
+                                    ${photoInfo}
+                                </div>
+                            </div>
+                            `;}).join('');
+                }
+
+                if (ngoRequestsGrid) {
+                    ngoRequestsGrid.innerHTML = '';
+                    const myRequests = itemRequests.filter(r => r.ngoId === currentUser.id);
+                    ngoRequestsGrid.innerHTML = myRequests.length === 0 ?
+                        `<p class="text-gray-600 dark:text-gray-300 col-span-full">You have no active item requests.</p>` :
+                        myRequests.map(item => {
+                            const isFulfilled = item.status === 'Fulfilled';
+                            const cardStyle = isFulfilled ?
+                                'bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg shadow-green-50 dark:shadow-green-900/50 border-2 border-green-100 dark:border-green-800' :
+                                'bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg shadow-slate-100 dark:shadow-slate-900/50 border border-gray-100 dark:border-gray-700';
+                            const statusText = isFulfilled ?
+                                `<p class="font-semibold text-green-700 dark:text-green-400"><i class="fa-solid fa-circle-check mr-2"></i> Pledged by ${item.fulfilledByPgName}</p>` :
+                                `<p class="font-semibold text-orange-600 dark:text-orange-400"><i class="fa-solid fa-clock-rotate-left mr-2"></i> Awaiting Pledge</p>`;
+                            return `
+                            <div class="${cardStyle}">
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">${item.itemName}</h3>
+                                <p class="text-gray-700 dark:text-gray-300 mb-4"><strong>Quantity:</strong> ${item.quantity}</p>
+                                ${statusText}
+                            </div>
+                            `;
+                        }).join('');
+                }
+            }
+
+            // --- Updated rendering for public item requests ---
+            function renderPublicFulfillRequests() {
+                if (!publicFulfillRequestsGrid) return;
+
+                publicFulfillRequestsGrid.innerHTML = '';
+                const neededItems = itemRequests.filter(r => r.status === 'Needed');
+
+                publicFulfillRequestsGrid.innerHTML = neededItems.length === 0 ?
+                    `<p class="text-gray-600 dark:text-gray-300 col-span-full">All item requests are currently fulfilled. Thank you!</p>` :
+                    neededItems.map(item => `
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg shadow-slate-100 dark:shadow-slate-900/50 border border-gray-100 dark:border-gray-700 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">${item.itemName}</h3>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Needed by ${item.ngoName}</p>
+                            <p class="text-gray-700 dark:text-gray-300 mb-6"><strong>Quantity:</strong> ${item.quantity}</p>
+                        </div>
+                        <button
+                            data-item-id="${item.id}"
+                            data-item-name="${item.itemName}"
+                            data-ngo-name="${item.ngoName}"
+                            class="donate-item-btn w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 px-6 rounded-lg font-semibold shadow-md hover:from-green-600 hover:to-emerald-600 transition-all duration-300 transform hover:shadow-lg hover:-translate-y-0.5">
+                            <i class="fa-solid fa-hand-holding-dollar mr-2"></i>Donate for Item
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            // --- EVENT HANDLERS ---
+            function handleAddFoodSubmit(e) {
+                e.preventDefault();
+                 if (!currentUser) return;
+
+                const photoFile = foodPhotoInput ? foodPhotoInput.files[0] : null;
+                const photoFilename = photoFile ? photoFile.name : null;
+
+                const newListing = {
+                    id: 'l' + Date.now(), pgId: currentUser.id, pgName: currentUser.name || 'Anonymous PG',
+                    foodName: document.getElementById('food-name').value,
+                    quantity: document.getElementById('food-quantity').value,
+                    pickupTime: document.getElementById('pickup-time').value,
+                    location: document.getElementById('location').value,
+                    photoFilename: photoFilename,
+                    status: 'Available', claimedByNgoId: null, claimedByNgoName: null
+                };
+                listings.unshift(newListing);
+                saveToStorage();
+                showAppAlert('success', 'Listing Added!', 'Your surplus food is now visible to NGOs.');
+                if(addFoodForm) addFoodForm.reset();
+                if(fileNameDisplay) fileNameDisplay.textContent = '';
+                handleTabSwitch(pgView, 'pg-listings');
+                renderPGView();
+            }
+
+            function handleAddRequestSubmit(e) {
+                e.preventDefault();
+                if (!currentUser) return;
+
+                const newItemRequest = {
+                    id: 'r' + Date.now(), ngoId: currentUser.id, ngoName: currentUser.name,
+                    itemName: document.getElementById('item-name').value,
+                    quantity: document.getElementById('item-quantity').value,
+                    status: 'Needed', fulfilledByPgId: null, fulfilledByPgName: null
+                };
+                itemRequests.unshift(newItemRequest);
+                saveToStorage();
+                showAppAlert('success', 'Request Added!', 'Your item request is now visible to PG Owners.');
+                if(addRequestForm) addRequestForm.reset();
+                renderNGOView();
+                renderPublicFulfillRequests();
+            }
+
+            function handleContactFormSubmit(e) {
+                e.preventDefault();
+                showAppAlert('success', 'Message Sent!', 'Thank you for contacting us. We will get back to you soon.');
+                if(contactForm) contactForm.reset();
+                showPublicView('hero');
+            }
+
+            function handleClaimClick(e) {
+                 if (!currentUser) return;
+                if (!e.target.classList.contains('claim-btn')) return;
+                const listingId = e.target.dataset.id;
+                const item = listings.find(l => l.id === listingId);
+                if (item) {
+                    item.status = 'Claimed';
+                    item.claimedByNgoId = currentUser.id;
+                    item.claimedByNgoName = currentUser.name;
+                    saveToStorage();
+                    showAppAlert('success', 'Food Claimed!', `Please pick up from ${item.pgName} by ${item.pickupTime}.`);
+                    renderNGOView();
+                    handleTabSwitch(ngoView, 'ngo-pickups');
+                }
+            }
+
+            function handlePledgeClick(e) {
+                 if (!currentUser) return;
+                if (!e.target.classList.contains('pledge-btn')) return;
+                const requestId = e.target.dataset.id;
+                const item = itemRequests.find(r => r.id === requestId);
+                if (item) {
+                    item.status = 'Fulfilled';
+                    item.fulfilledByPgId = currentUser.id;
+                    item.fulfilledByPgName = currentUser.name || 'Anonymous PG';
+                    saveToStorage();
+                    showAppAlert('success', 'Request Pledged!', `Thank you for supporting ${item.ngoName}.`);
+                    renderPGView();
+                    renderPublicFulfillRequests();
+                    renderNGOView();
+                }
+            }
+
+            // --- New Handler for Donate Item Button ---
+            function handleDonateForItemClick(e) {
+                 const donateButton = e.target.closest('.donate-item-btn');
+                 if (!donateButton) return;
+
+                 const itemName = donateButton.dataset.itemName;
+                 const ngoName = donateButton.dataset.ngoName;
+
+                 showAppAlert('success', 'Donation Initiated (Simulation)', `Thank you for choosing to donate towards purchasing "${itemName}" for ${ngoName}. Please proceed with payment via our main donation channels for now.`);
+            }
+
+            // --- New Handler for Collaborate Button ---
+             function handleCollaborateClick() {
+                 showAppAlert('success', 'Let\'s Collaborate!', 'Interested in partnering with ZeroWasteByte? Please email us at partnerships@zerowastebyte.demo to discuss opportunities.');
+             }
+
+
+            // --- ALERT MODAL ---
+            function showAppAlert(type, title, message) {
+                 if (!alertTitle || !alertMessage || !alertIcon || !alertCloseBtn || !alertModal || !alertBox) return;
+
+                alertTitle.textContent = title;
+                alertMessage.textContent = message;
+                if (type === 'success') {
+                    alertIcon.innerHTML = `<i class="fa-solid fa-check text-4xl text-green-500"></i>`;
+                    alertIcon.className = "w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-green-100 dark:bg-green-900/50"; // Adjusted dark bg
+                    alertCloseBtn.className = "w-full py-3 px-4 rounded-lg font-semibold text-white bg-green-600 hover:bg-green-700 transition-all duration-200 transform hover:-translate-y-0.5";
+                } else {
+                    alertIcon.innerHTML = `<i class="fa-solid fa-exclamation-triangle text-4xl text-red-500"></i>`;
+                    alertIcon.className = "w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-red-100 dark:bg-red-900/50"; // Adjusted dark bg
+                    alertCloseBtn.className = "w-full py-3 px-4 rounded-lg font-semibold text-white bg-red-600 hover:bg-red-700 transition-all duration-200 transform hover:-translate-y-0.5";
+                }
+                alertModal.classList.remove('hidden');
+                setTimeout(() => {
+                    alertBox.classList.add('scale-100', 'opacity-100');
+                    alertBox.classList.remove('scale-95', 'opacity-0');
+                }, 10);
+            }
+
+            function closeAppAlert() {
+                if (!alertBox || !alertModal) return;
+
+                alertBox.classList.add('scale-95', 'opacity-0');
+                alertBox.classList.remove('scale-100', 'opacity-100');
+                setTimeout(() => {
+                    alertModal.classList.add('hidden');
+                }, 200);
+            }
+
+            // --- New function to update file name display ---
+            function updateFileName() {
+                if (foodPhotoInput && fileNameDisplay) {
+                    const file = foodPhotoInput.files[0];
+                    if (file) {
+                        fileNameDisplay.textContent = `Selected: ${file.name}`;
+                    } else {
+                        fileNameDisplay.textContent = '';
+                    }
+                }
+            }
+
+
+            // --- EVENT LISTENERS ---
+            function attachEventListeners() {
+                // Login Buttons
+                const loginPgBtn = document.getElementById('login-pg');
+                const loginNgoBtn = document.getElementById('login-ngo');
+                if (loginPgBtn) loginPgBtn.addEventListener('click', (e) => { e.preventDefault(); login('pg'); });
+                if (loginNgoBtn) loginNgoBtn.addEventListener('click', (e) => { e.preventDefault(); login('ngo'); });
+
+                // Logout Button
+                const logoutBtn = document.getElementById('logout-btn');
+                if (logoutBtn) logoutBtn.addEventListener('click', logout);
+
+                // Login Dropdown
+                if (loginDropdownBtn && loginDropdownMenu) {
+                    loginDropdownBtn.addEventListener('click', () => {
+                        loginDropdownMenu.classList.toggle('hidden');
+                        const icon = loginDropdownBtn.querySelector('i');
+                        if (icon) icon.classList.toggle('rotate-180');
+                    });
+                }
+                document.addEventListener('click', (e) => {
+                    const container = document.getElementById('login-dropdown-container');
+                    const icon = loginDropdownBtn ? loginDropdownBtn.querySelector('i') : null;
+                    if (container && !container.contains(e.target) && loginDropdownMenu && icon) {
+                        loginDropdownMenu.classList.add('hidden');
+                        icon.classList.remove('rotate-180');
+                    }
+                });
+
+                // Public Page Navigation
+                if (publicNavLinks) {
+                    publicNavLinks.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const navLink = e.target.closest('.public-nav-link');
+                        if (navLink && navLink.dataset.view) {
+                            showPublicView(navLink.dataset.view);
+                            window.scrollTo(0, 0);
+                        }
+                    });
+                }
+
+                // Hero CTA Buttons
+                if (heroDonateBtn) heroDonateBtn.addEventListener('click', () => showPublicView('donate'));
+                if (heroListBtn && loginDropdownBtn) heroListBtn.addEventListener('click', () => loginDropdownBtn.click());
+                 // New listener for Collaborate button
+                 if (heroCollaborateBtn) heroCollaborateBtn.addEventListener('click', handleCollaborateClick);
+
+
+                // Forms
+                if (addFoodForm) addFoodForm.addEventListener('submit', handleAddFoodSubmit);
+                if (addRequestForm) addRequestForm.addEventListener('submit', handleAddRequestSubmit);
+                if (contactForm) contactForm.addEventListener('submit', handleContactFormSubmit);
+
+                // New listener for file input change
+                if (foodPhotoInput) {
+                    foodPhotoInput.addEventListener('change', updateFileName);
+                }
+
+
+                // Tab Navigation
+                const pgNav = pgView ? pgView.querySelector('nav') : null;
+                if (pgNav) {
+                    pgNav.addEventListener('click', (e) => {
+                        const tab = e.target.closest('.tab-btn');
+                        if (tab && tab.dataset.tab) {
+                            handleTabSwitch(pgView, tab.dataset.tab);
+                        }
+                    });
+                }
+
+                const ngoNav = ngoView ? ngoView.querySelector('nav') : null;
+                if (ngoNav) {
+                    ngoNav.addEventListener('click', (e) => {
+                        const tab = e.target.closest('.tab-btn');
+                        if (tab && tab.dataset.tab) {
+                            handleTabSwitch(ngoView, tab.dataset.tab);
+                        }
+                    });
+                }
+
+                // Button clicks within Grids (Need null checks)
+                if (ngoListingsGrid) ngoListingsGrid.addEventListener('click', handleClaimClick);
+                if (fulfillRequestsGrid) fulfillRequestsGrid.addEventListener('click', handlePledgeClick);
+
+                // --- Updated Event Listener for Donate Item Button ---
+                if (publicFulfillRequestsGrid) {
+                    publicFulfillRequestsGrid.addEventListener('click', handleDonateForItemClick);
+                }
+
+
+                // Alert Modal Close
+                if (alertCloseBtn) alertCloseBtn.addEventListener('click', closeAppAlert);
+                if (alertModal) alertModal.addEventListener('click', (e) => {
+                    if (e.target === alertModal) closeAppAlert();
+                });
+
+                // Footer Links
+                footerNavLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        if (link.dataset.view) {
+                            const viewName = link.dataset.view;
+                            if (!currentUser) {
+                                showPublicView(viewName);
+                                window.scrollTo(0, 0);
+                            } else {
+                                logout();
+                                setTimeout(() => {
+                                    showPublicView(viewName);
+                                    window.scrollTo(0, 0);
+                                }, 50);
+                            }
+                        }
+                    });
+                });
+
+                // Mobile Menu
+                if (mobileMenuBtn && mobileMenu) mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.remove('hidden'));
+                if (mobileCloseBtn && mobileMenu) mobileCloseBtn.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+                if (mobileMenu) mobileMenu.addEventListener('click', (e) => {
+                    if (e.target === mobileMenu) mobileMenu.classList.add('hidden');
+                });
+                mobileNavLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                         if (link.dataset.view) {
+                             showPublicView(link.dataset.view);
+                             window.scrollTo(0, 0);
+                         }
+                    });
+                });
+            }
+
+            // --- START THE APP ---
+            init();
+        });
+    </script>
+</body>
+</html>
